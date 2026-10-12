@@ -1,0 +1,29 @@
+name: Repository security
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  hygiene:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check for tracked private keys and firmware credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-files -z | xargs -0 -r grep -IlE -- '-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----|sk-proj-[A-Za-z0-9_-]{12,}' | grep -vE '^\.github/workflows/security\.yml$'; then
+            echo "Potential embedded secret detected" >&2
+            exit 1
+          fi
+          if git ls-files | grep -E '(^|/)(wifi\.txt|api\.key|\.env|credentials\.json)$'; then
+            echo "Runtime credential file tracked" >&2
+            exit 1
+          fi
