@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" role="img" aria-label="ESP8266 HP 82240 infrared transmitter wiring diagram">
+<rect width="960" height="470" fill="#f8fafc"/><text x="42" y="46" font-size="27" font-family="Arial" font-weight="bold" fill="#172b4d">HP 82240 — ESP8266 IR Transmitter</text>
+<text x="42" y="76" font-size="16" font-family="Arial" fill="#475569">Wemos D1 Mini / NodeMCU · NPN low-side driver · 940 nm IR LED</text>
+<rect x="65" y="130" width="235" height="255" rx="18" fill="#dce8f3" stroke="#385a78" stroke-width="3"/><text x="182" y="172" font-size="25" text-anchor="middle" font-family="Arial" fill="#173452">ESP8266</text>
+<g font-size="18" font-family="Arial" fill="#173452"><text x="92" y="227">D2 / GPIO4</text><text x="92" y="288">3V3</text><text x="92" y="349">GND</text></g>
+<g stroke="#334155" stroke-width="3" fill="none"><path d="M300 220 H374"/><path d="M454 220 H548"/><path d="M548 220 H622"/><path d="M300 282 H385 V115 H722"/><path d="M300 342 H830 V367 H688"/></g>
+<rect x="374" y="206" width="80" height="28" fill="#fef3c7" stroke="#b45309" stroke-width="2"/><text x="414" y="199" font-family="Arial" font-size="17" text-anchor="middle">1 kΩ</text>
+<circle cx="670" cy="220" r="55" fill="white" stroke="#334155" stroke-width="3"/><path d="M622 220 H648 M648 198 V242 M648 220 L692 187 M692 187 V150 M648 220 L692 253 V367" stroke="#334155" stroke-width="3" fill="none"/>
+<path d="M685 185 L681 199 L696 196 Z" fill="#334155"/><text x="728" y="238" font-family="Arial" font-size="17">2N2222</text>
+<text x="729" y="260" font-family="Arial" font-size="14" fill="#64748b">Check pinout!</text>
+<path d="M722 115 H770" stroke="#334155" stroke-width="3"/><rect x="770" y="102" width="70" height="26" fill="#fef3c7" stroke="#b45309" stroke-width="2"/><text x="805" y="95" text-anchor="middle" font-size="16" font-family="Arial">47 Ω*</text>
+<path d="M840 115 H882 V150 H692" fill="none" stroke="#334155" stroke-width="3"/>
+<path d="M692 150 V164 M679 164 H705 M679 173 H705 M692 173 V187" stroke="#334155" stroke-width="3"/>
+<path d="M714 167 l24 -19 m-8 0 h8 v8 M722 179 l24 -19 m-8 0 h8 v8" stroke="#f59e0b" stroke-width="3" fill="none"/>
+<text x="748" y="182" font-size="17" font-family="Arial">IR LED 940 nm</text>
+<text x="42" y="428" font-size="16" font-family="Arial" fill="#475569">*47 Ω is indicative for 3.3 V. Check LED current, supply capability and transistor pinout before assembly.</text>
+</svg>
