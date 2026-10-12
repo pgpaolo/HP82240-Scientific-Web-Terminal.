@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 690" role="img" aria-label="Concept preview of HP 82240 web terminal interface">
+<rect width="1100" height="690" fill="#161d26"/><rect x="30" y="24" width="1040" height="640" rx="20" fill="#202b36"/>
+<text x="64" y="82" font-family="Arial" font-size="30" font-weight="bold" fill="#f0d19a">HP 82240 Scientific Web Terminal</text>
+<text x="65" y="110" font-family="Arial" font-size="16" fill="#a6b7c6">ESP8266 · Scientific calculator · Redeye IR · Wi-Fi</text>
+<g font-family="Arial" font-size="18" text-anchor="middle"><rect x="62" y="143" width="138" height="45" rx="8" fill="#a27a3b"/><text x="131" y="171" fill="white">Testo</text><rect x="210" y="143" width="138" height="45" rx="8" fill="#394958"/><text x="279" y="171" fill="white">ALG</text><rect x="358" y="143" width="138" height="45" rx="8" fill="#394958"/><text x="427" y="171" fill="white">RPN</text><rect x="506" y="143" width="138" height="45" rx="8" fill="#394958"/><text x="575" y="171" fill="white">Grafici</text><rect x="654" y="143" width="138" height="45" rx="8" fill="#394958"/><text x="723" y="171" fill="white">Wi-Fi</text><rect x="802" y="143" width="138" height="45" rx="8" fill="#394958"/><text x="871" y="171" fill="white">Stato</text></g>
+<text x="65" y="233" font-family="Arial" font-size="22" fill="#edf2f7">Editor di stampa</text><rect x="62" y="250" width="475" height="282" rx="9" fill="#131c24" stroke="#536474"/>
+<g font-family="monospace" font-size="21" fill="#d6e1e9"><text x="88" y="298">HP 82240 WEB TERMINAL</text><text x="88" y="334">------------------------</text><text x="88" y="371">SCIENTIFIC CALCULATOR</text><text x="88" y="407">125 x 3 = 375</text><text x="88" y="444">sin(30) = 0.5</text></g>
+<text x="577" y="233" font-family="Arial" font-size="22" fill="#edf2f7">Anteprima carta termica</text><rect x="576" y="250" width="420" height="282" rx="4" fill="#f4e6bf"/>
+<g font-family="monospace" font-size="20" fill="#2b2b24"><text x="603" y="298">HP 82240 WEB TERMINAL</text><text x="603" y="334">------------------------</text><text x="603" y="371">SCIENTIFIC CALCULATOR</text><text x="603" y="407">125 x 3 = 375</text><text x="603" y="444">sin(30) = 0.5</text></g>
+<rect x="62" y="560" width="255" height="55" rx="10" fill="#9e763b"/><text x="190" y="595" text-anchor="middle" font-family="Arial" font-size="22" fill="white">Stampa IR</text>
+<text x="360" y="593" font-family="Arial" font-size="17" fill="#cbd5df">Illustrative mockup — not an actual browser screenshot</text>
+</svg>
