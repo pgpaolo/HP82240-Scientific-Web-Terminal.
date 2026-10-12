@@ -29,7 +29,7 @@ curl -X POST http://192.168.4.1/api/print --data-urlencode 'plain=HELLO HP 82240
 HTTP success only acknowledges attempted IR transmission, not physical printing.
 
 ## License
-Copyright © 2026 Gianpaolo Paglialunga. Licensed under [PolyForm Noncommercial 1.0.0](LICENSE); commercial use requires a separate written license. Third-party licenses remain unaffected.
+Copyright © 2026 Gianpaolo P.. Licensed under [PolyForm Noncommercial 1.0.0](LICENSE); commercial use requires a separate written license. Third-party licenses remain unaffected.
 
 ## Web interface preview
 
