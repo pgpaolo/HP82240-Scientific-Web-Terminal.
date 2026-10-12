@@ -29,4 +29,16 @@ curl -X POST http://192.168.4.1/api/print --data-urlencode 'plain=HELLO HP 82240
 HTTP success only acknowledges attempted IR transmission, not physical printing.
 
 ## License
-No open-source license selected; do not assume reuse permission.
+Copyright © 2026 Gianpaolo Paglialunga. Licensed under [PolyForm Noncommercial 1.0.0](LICENSE); commercial use requires a separate written license. Third-party licenses remain unaffected.
+
+## Web interface preview
+
+![Illustrative UI preview](docs/images/web-preview.svg)
+
+*Concept preview, not an actual browser screenshot.*
+
+## ESP8266 infrared transmitter circuit
+
+![ESP8266 HP 82240 IR wiring](docs/images/circuit.svg)
+
+Check actual 2N2222 pinout, LED current and 3.3 V supply before wiring. IR protocol remains experimental and has not been bench-tested.
