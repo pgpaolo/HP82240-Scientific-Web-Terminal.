@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HP 82240 Scientific Web Terminal</title>
+<style>
+:root{font-family:system-ui,sans-serif;color-scheme:dark;background:#171b20;color:#edf1f4}
+*{box-sizing:border-box}body{max-width:850px;margin:auto;padding:16px}h1{font-size:1.45rem;color:#d8c08a}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}button,select,input,textarea{font:inherit;border:1px solid #56616e;border-radius:8px;padding:9px;background:#2b3540;color:#fff}button{cursor:pointer}button:hover{background:#405064}button.primary{background:#86652b;border-color:#ae8741}
+.panel{background:#222a33;padding:16px;border-radius:12px;margin-bottom:15px}section{display:none}section.active{display:block}
+textarea{width:100%;min-height:150px}input{max-width:100%;width:100%}
+.paper{background:#f6eccf;color:#26231a;padding:16px;white-space:pre-wrap;font:15px/1.3 monospace;overflow-wrap:anywhere;min-height:90px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.grid button{padding:14px 3px}
+.screen{background:#b4c5ab;color:#142319;border-radius:8px;padding:16px;text-align:right;font:24px monospace;min-height:60px;overflow-wrap:anywhere}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}label{display:block;margin:10px 0 5px}.muted{color:#abb4be;font-size:.85rem}
+#log{white-space:pre-wrap;font:12px monospace}
+</style></head><body>
+<header><h1>HP 82240 Scientific Web Terminal</h1><div class="muted">ESP8266 · ALG / RPN · Text · Wi-Fi · Experimental IR</div></header>
+<nav><button onclick="show('text')">Testo</button><button onclick="show('alg')">ALG</button><button onclick="show('rpn')">RPN</button><button onclick="show('convert')">Conversioni</button><button onclick="show('graph')">Grafici</button><button onclick="show('wifi')">Wi-Fi</button><button onclick="show('status')">Stato</button></nav>
+<section id="text" class="active panel"><h2>Editor testo</h2>
+<textarea id="printText" oninput="preview()">HP 82240 WEB TERMINAL
+------------------------
+Scientific calculator
+ESP8266 Wi-Fi printer
+
+Hello HP 82240!
+</textarea><p class="muted">Larghezza consigliata: 24 caratteri per riga. Solo ASCII in questa versione.</p>
+<div class="row"><button class="primary" onclick="printText()">Stampa IR</button><button onclick="testIR()">Test IR</button><button onclick="document.getElementById('printText').value='';preview()">Pulisci</button></div>
+<h3>Anteprima carta</h3><div class="paper" id="paper"></div></section>
+<section id="alg" class="panel"><h2>Calcolatrice ALG</h2><input id="expr" value="125*3" placeholder="es. sin(30)+sqrt(16)">
+<p>Angoli <select id="angle"><option value="DEG">DEG</option><option value="RAD">RAD</option></select></p>
+<div class="screen" id="algResult">0</div>
+<div class="grid" id="keys"></div>
+<div class="row"><button class="primary" onclick="calcALG()">= Calcola</button><button onclick="addResult()">Aggiungi alla stampa</button><button onclick="document.getElementById('expr').value=''">C</button></div></section>
+<section id="rpn" class="panel"><h2>Calcolatrice RPN</h2>
+<div class="screen" id="stack"></div><label>Numero / valore X</label><input id="rpnEntry" type="number" step="any" placeholder="Valore">
+<div class="row"><button onclick="pushRPN()">ENTER</button><button onclick="opRPN('+')">+</button><button onclick="opRPN('-')">−</button><button onclick="opRPN('*')">×</button><button onclick="opRPN('/')">÷</button><button onclick="swapRPN()">SWAP</button><button onclick="rollRPN()">ROLL</button><button onclick="addRPN()">Stampa X</button></div>
+<p class="muted">Stack RPN dimostrativo a quattro livelli; semantica completa HP da validare.</p></section>
+<section id="convert" class="panel"><h2>Conversioni scientifiche</h2>
+<label>Valore</label><input id="cv" type="number" value="1" step="any">
+<label>Conversione</label><select id="unit"><option value="km-mi">km → miglia</option><option value="mi-km">miglia → km</option><option value="c-f">°C → °F</option><option value="f-c">°F → °C</option><option value="kg-lb">kg → libbre</option><option value="lb-kg">libbre → kg</option><option value="pa-bar">Pa → bar</option></select>
+<p class="screen" id="conversion">—</p><button onclick="convert()">Converti</button><button onclick="append(document.getElementById('conversion').textContent)">Aggiungi alla stampa</button></section>
+<section id="graph" class="panel"><h2>Grafico ASCII</h2><p class="muted">Grafico semplice di sin(x) con output testuale compatibile con la carta.</p><button onclick="graph()">Genera grafico</button><pre id="graphResult"></pre><button onclick="append(document.getElementById('graphResult').textContent)">Aggiungi alla stampa</button></section>
+<section id="wifi" class="panel"><h2>Configurazione Wi-Fi</h2><p>Ricerca reti disponibili, selezione SSID e password.</p>
+<button onclick="scan()">Cerca reti Wi-Fi</button><label>Rete</label><select id="networks" onchange="document.getElementById('ssid').value=this.value"><option>Premere Cerca reti</option></select>
+<label>SSID</label><input id="ssid" maxlength="32"><label>Password</label><input id="wifiPassword" type="password" maxlength="63">
+<p><button class="primary" onclick="saveWifi()">Salva rete e riavvia</button></p><p class="muted">ATTENZIONE: AP di recupero aperto e API non autenticata in v0.1.0: solo reti isolate.</p></section>
+<section id="status" class="panel"><h2>Stato e diagnostica</h2><button onclick="status()">Aggiorna</button><pre id="deviceStatus"></pre><h3>Log</h3><div id="log"></div></section>
+<footer class="muted">HP 82240 Scientific Web Terminal v0.1.0 • Redeye non ancora validato su stampante reale</footer>
+<script>
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('section').forEach(x=>x.classList.toggle('active',x.id===id));if(id==='status')status()}
+function preview(){$('paper').textContent=$('printText').value}
+function append(t){$('printText').value+=($('printText').value.endsWith('\n')?'':'\n')+t+'\n';preview();show('text')}
+function log(t){$('log').textContent=new Date().toLocaleTimeString()+' '+t+'\n'+$('log').textContent}
+async function api(path,opt){const r=await fetch(path,opt);const data=await r.json();if(!r.ok)throw Error(data.error||r.status);return data}
+async function printText(){try{let d=await api('/api/print',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({plain:$('printText').value})});log('IR sent, NOT printer-confirmed: '+JSON.stringify(d));alert('Trasmissione tentata. Stampa fisica non verificabile.')}catch(e){log('Print: '+e.message);alert(e.message)}}
+async function testIR(){try{log(JSON.stringify(await api('/api/ir/test',{method:'POST'})))}catch(e){log(e.message)}}
+async function scan(){try{let networks=await api('/api/wifi/scan');$('networks').replaceChildren(...networks.map(n=>{let o=document.createElement('option');o.value=n.ssid;o.textContent=n.ssid+' ('+n.rssi+' dBm) '+(n.secure?'🔒':'');return o}));log(networks.length+' Wi-Fi networks found')}catch(e){log(e.message)}}
+async function saveWifi(){try{let d=await api('/api/wifi',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({ssid:$('ssid').value,password:$('wifiPassword').value})});log(JSON.stringify(d));alert('Configurazione salvata, dispositivo in riavvio.')}catch(e){log(e.message)}}
+async function status(){try{$('deviceStatus').textContent=JSON.stringify(await api('/api/status'),null,2)}catch(e){log(e.message)}}
+let ans=0;
+function evalALG(s){if(s.length>140||!/^[\w\d\s.,+*/^()%-]+$/.test(s))throw Error('Espressione non valida');
+let terms=s.match(/[A-Za-z_]+|\d+(?:\.\d+)?|\*\*|[()+*/^%,.-]/g);
+if(!terms||terms.join('')!==s.replace(/\s/g,''))throw Error('Token sconosciuto');
+const fns=['sin','cos','tan','sqrt','log','ln','abs','pow'];if(terms.some(t=>/[A-Za-z_]/.test(t)&&!fns.includes(t)&&!['pi','e','ans'].includes(t)))throw Error('Funzione non consentita');
+let trig=x=>$('angle').value==='DEG'?x*Math.PI/180:x;
+let context={sin:x=>Math.sin(trig(x)),cos:x=>Math.cos(trig(x)),tan:x=>Math.tan(trig(x)),sqrt:Math.sqrt,log:Math.log10,ln:Math.log,abs:Math.abs,pow:Math.pow,pi:Math.PI,e:Math.E,ans};
+const js=terms.map(t=>t==='^'?'**':Object.hasOwn(context,t)?'ctx.'+t:t).join('');
+// Local browser demonstration evaluator; not for untrusted Internet input.
+const n=Function('ctx','"use strict";return ('+js+')')(context);
+if(typeof n!=='number'||!Number.isFinite(n))throw Error('Risultato non finito');return n}
+function calcALG(){try{ans=evalALG($('expr').value);$('algResult').textContent=String(Number(ans.toPrecision(12)));log('ALG '+$('expr').value+' = '+ans)}catch(e){$('algResult').textContent='Errore';log(e.message)}}
+function addResult(){append($('expr').value+' = '+$('algResult').textContent)}
+'789/456*123-0.()+'.split('').forEach(k=>{let b=document.createElement('button');b.textContent=k;b.onclick=()=>{$('expr').value+=k};$('keys').appendChild(b)});
+['sin(', 'cos(', 'tan(', 'sqrt(', 'log(', '^'].forEach(k=>{let b=document.createElement('button');b.textContent=k;b.onclick=()=>{$('expr').value+=k};$('keys').appendChild(b)});
+let stack=[0,0,0,0];
+function updateStack(){$('stack').textContent=['T','Z','Y','X'].map((k,i)=>k+': '+stack[i]).join('   ')}
+function pushRPN(){let n=Number($('rpnEntry').value);if(!Number.isFinite(n))return;stack=[stack[1],stack[2],stack[3],n];updateStack()}
+function opRPN(op){let x=stack[3],y=stack[2];let n=op==='+'?y+x:op==='-'?y-x:op==='*'?y*x:y/x;if(!Number.isFinite(n))return alert('Operazione non valida');stack=[stack[0],stack[0],stack[1],n];updateStack()}
+function swapRPN(){[stack[2],stack[3]]=[stack[3],stack[2]];updateStack()}
+function rollRPN(){stack=[stack[1],stack[2],stack[3],stack[0]];updateStack()}
+function addRPN(){append('RPN X = '+stack[3])}
+function convert(){let x=Number($('cv').value),type=$('unit').value, y=type==='km-mi'?x/1.609344:type==='mi-km'?x*1.609344:type==='c-f'?x*9/5+32:type==='f-c'?(x-32)*5/9:type==='kg-lb'?x*2.2046226218:type==='lb-kg'?x/2.2046226218:x/100000;$('conversion').textContent=x+' ('+type+') = '+Number(y.toPrecision(11))}
+function graph(){let out=['SIN(X) ASCII'];for(let i=0;i<=18;i++){let x=-Math.PI+i*Math.PI/9;let pos=Math.round((Math.sin(x)+1)*10);out.push(' '.repeat(pos)+'*')} $('graphResult').textContent=out.join('\n')}
+preview();updateStack();
+</script></body></html>
