@@ -5,14 +5,14 @@ class PrinterIR {
   uint32_t sent_=0;
   void burst(){for(uint8_t i=0;i<7;++i){digitalWrite(pin_,HIGH);delayMicroseconds(15);digitalWrite(pin_,LOW);delayMicroseconds(15);}}
   void half(bool mark){if(mark){burst();delayMicroseconds(217);}else delayMicroseconds(427);}
-  void bit(bool v){half(v);half(!v);}
+  void sendBit(bool v){half(v);half(!v);}
   void byte(uint8_t v){
     // Experimental HP Redeye framing: requires logic analyzer validation.
     noInterrupts();
     half(true);half(true);half(true);
     const uint8_t masks[]={0x78,0xE6,0xD5,0x8B};
-    for(uint8_t mask:masks)bit(__builtin_parity((unsigned)(v&mask)));
-    for(int i=7;i>=0;--i)bit((v>>i)&1);
+    for(uint8_t mask:masks)sendBit(__builtin_parity((unsigned)(v&mask)));
+    for(int i=7;i>=0;--i)sendBit((v>>i)&1);
     half(false);half(false);half(false);
     interrupts();++sent_;yield();
   }
