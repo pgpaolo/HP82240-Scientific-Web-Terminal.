@@ -17,7 +17,6 @@ bool apMode=false;
 String apPassword;
 unsigned long bootMs=0;
 static const char* AUTH_HEADER="X-API-Key";
-const char* headersToCollect[]={"X-API-Key","Origin"};
 
 String jsonEscape(String s) {
   s.replace("\\","\\\\"); s.replace("\"","\\\"");
@@ -118,7 +117,7 @@ void setup(){
   Serial.println("API KEY (keep private): "+config.apiKey);
   printer.begin();
   connectNetwork();
-  server.collectHeaders(headersToCollect,2);
+  server.collectHeaders("X-API-Key", "Origin");
   setupRoutes();server.begin();
   Serial.println("STA IP: "+WiFi.localIP().toString());
   bootMs=millis();
